@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTG Computer — Jasa Instal Ulang Komputer Panggilan Denpasar</title>
+<meta name="description" content="Jasa instal ulang Windows 10/11, instal software, optimasi & bersih virus. Home service Denpasar-Bali, garansi 7 hari.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#38bdf8;
+  --accent-dim:rgba(56,189,248,.12);
+  --bg:#0b1220;
+  --bg2:#0f172a;
+  --card:#111c33;
+  --text:#e8eef7;
+  --muted:#93a3bb;
+  --line:rgba(148,163,184,.15);
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+/* header */
+header{position:sticky;top:0;z-index:50;background:rgba(11,18,32,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{font-weight:800;font-size:1.15rem;letter-spacing:.2px}
+.brand span{color:var(--accent)}
+.nav-links{display:flex;gap:26px;font-size:.92rem;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#04121c;font-weight:700;padding:11px 22px;border-radius:999px;font-size:.95rem;transition:transform .15s,box-shadow .15s;border:none;cursor:pointer}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(56,189,248,.35)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn.ghost:hover{box-shadow:none;border-color:var(--accent)}
+.btn.sm{padding:8px 18px;font-size:.88rem}
+/* hero */
+.hero{padding:84px 0 64px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 300px at 50% -60px,var(--accent-dim),transparent);pointer-events:none}
+.badge{display:inline-block;background:var(--accent-dim);color:var(--accent);font-size:.8rem;font-weight:700;padding:7px 16px;border-radius:999px;margin-bottom:20px;letter-spacing:.4px}
+.hero h1{font-size:clamp(2rem,5.5vw,3.4rem);font-weight:800;line-height:1.15;margin-bottom:16px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{color:var(--muted);font-size:1.08rem;max-width:620px;margin:0 auto 32px}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.trust{display:flex;gap:28px;justify-content:center;margin-top:44px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}
+.trust b{color:var(--text);display:block;font-size:1.05rem}
+/* sections */
+section{padding:64px 0}
+.sec-head{text-align:center;margin-bottom:40px}
+.sec-head h2{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:800;margin-bottom:10px}
+.sec-head p{color:var(--muted);max-width:560px;margin:0 auto}
+.grid{display:grid;gap:18px}
+.grid.c4{grid-template-columns:repeat(4,1fr)}
+.grid.c3{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;transition:transform .15s,border-color .15s}
+.card:hover{transform:translateY(-4px);border-color:var(--accent)}
+.card .icon{width:46px;height:46px;border-radius:12px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.card .icon svg{width:24px;height:24px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.card h3{font-size:1.05rem;margin-bottom:8px}
+.card p{color:var(--muted);font-size:.92rem}
+/* pricing */
+.price-card{display:flex;flex-direction:column;position:relative}
+.price-card.best{border:2px solid var(--accent)}
+.flag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--accent);color:#04121c;font-size:.75rem;font-weight:800;padding:4px 14px;border-radius:999px;white-space:nowrap}
+.price-card h3{font-size:1.1rem}
+.was{color:var(--muted);text-decoration:line-through;font-size:.95rem}
+.now{font-size:2.1rem;font-weight:800;color:var(--accent);margin:4px 0 16px}
+.now small{font-size:.9rem;font-weight:600;color:var(--muted)}
+.price-card ul{list-style:none;margin-bottom:24px;flex:1}
+.price-card li{padding:7px 0;color:var(--muted);font-size:.92rem;border-bottom:1px dashed var(--line)}
+.price-card li:last-child{border:none}
+.price-card li::before{content:"✓ ";color:var(--accent);font-weight:700}
+.note{text-align:center;color:var(--muted);font-size:.9rem;margin-top:22px}
+/* steps */
+.step{text-align:center;padding:10px}
+.step .num{width:52px;height:52px;border-radius:50%;background:var(--accent);color:#04121c;font-weight:800;font-size:1.3rem;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.step h3{margin-bottom:6px;font-size:1.02rem}
+.step p{color:var(--muted);font-size:.9rem}
+/* faq */
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden}
+summary{padding:18px 22px;cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--accent);font-size:1.4rem;font-weight:700}
+details[open] summary::after{content:"–"}
+details p{padding:0 22px 18px;color:var(--muted);font-size:.93rem}
+.faq-list{max-width:720px;margin:0 auto}
+/* cta banner */
+.cta-banner{background:linear-gradient(135deg,var(--accent-dim),transparent);border:1px solid var(--line);border-radius:24px;padding:56px 32px;text-align:center}
+.cta-banner h2{font-size:clamp(1.5rem,4vw,2.2rem);margin-bottom:12px}
+.cta-banner p{color:var(--muted);margin-bottom:28px}
+/* footer */
+footer{border-top:1px solid var(--line);padding:32px 0;text-align:center;color:var(--muted);font-size:.88rem}
+footer b{color:var(--text)}
+/* floating WA */
+.wa-float{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(34,197,94,.4);z-index:60;transition:transform .15s}
+.wa-float:hover{transform:scale(1.08)}
+.wa-float svg{width:30px;height:30px;fill:#fff}
+@media(max-width:860px){.grid.c4{grid-template-columns:repeat(2,1fr)}.grid.c3{grid-template-columns:1fr}.nav-links{display:none}.hero{padding:60px 0 48px}}
+@media(max-width:520px){.grid.c4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#">GTG <span>Computer</span></a>
+    <nav class="nav-links">
+      <a href="#layanan">Layanan</a>
+      <a href="#paket">Paket</a>
+      <a href="#alur">Alur</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn sm" href="https://wa.me/628561630990?text=Halo%20GTG%20Computer!%20Saya%20mau%20tanya%20jasa%20instal%20ulang%20komputer." target="_blank" rel="noopener">Chat WA</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="badge">HOME SERVICE DENPASAR – BALI</span>
+    <h1>Komputer Bermasalah?<br><em>Beres di Tempat.</em></h1>
+    <p>Jasa instal ulang Windows 10/11, instal software, optimasi &amp; bersih virus. Teknisi datang ke lokasimu — garansi 7 hari.</p>
+    <div class="cta-row">
+      <a class="btn" href="https://wa.me/628561630990?text=Halo%20GTG%20Computer!%20Saya%20mau%20booking%20jasa%20instal%20ulang%20komputer." target="_blank" rel="noopener">Booking via WhatsApp</a>
+      <a class="btn ghost" href="#paket">Lihat Paket Harga</a>
+    </div>
+    <div class="trust">
+      <div><b>7 Hari</b>Garansi servis</div>
+      <div><b>6 KM</b>Home service gratis</div>
+      <div><b>Datang ke Lokasi</b>Nggak perlu bongkar PC</div>
+    </div>
+  </div>
+</div>
+
+<section id="layanan">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Layanan Kami</h2>
+      <p>Semua dikerjakan di tempatmu, transparan, dan bergaransi.</p>
+    </div>
+    <div class="grid c4">
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <h3>Instal Ulang Windows</h3>
+        <p>Windows 10/11 fresh install + driver lengkap sampai semua perangkat jalan normal.</p>
+      </div>
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></div>
+        <h3>Instal Software</h3>
+        <p>Office, browser, PDF reader, antivirus, dan software harian siap pakai.</p>
+      </div>
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></div>
+        <h3>Optimasi &amp; Bersih Virus</h3>
+        <p>Komputer lemot dibikin enteng lagi, virus &amp; malware dibersihkan tuntas.</p>
+      </div>
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></div>
+        <h3>Backup &amp; Restore Data</h3>
+        <p>Data penting diamankan dulu sebelum instal ulang, lalu dikembalikan rapi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="paket" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Paket Harga Promo</h2>
+      <p>Harga coret = harga normal. Mumpung promo, gas.</p>
+    </div>
+    <div class="grid c3">
+      <div class="card price-card">
+        <h3>BASIC</h3>
+        <div class="was">Rp100.000</div>
+        <div class="now">Rp50<small>.000</small></div>
+        <ul>
+          <li>Instal Windows 10/11</li>
+          <li>Driver lengkap</li>
+        </ul>
+        <a class="btn ghost" href="https://wa.me/628561630990?text=Halo%20GTG%20Computer!%20Saya%20mau%20ambil%20paket%20BASIC%20(Rp50rb)." target="_blank" rel="noopener">Ambil Basic</a>
+      </div>
+      <div class="card price-card best">
+        <span class="flag">PALING LARIS</span>
+        <h3>STANDAR</h3>
+        <div class="was">Rp150.000</div>
+        <div class="now">Rp100<small>.000</small></div>
+        <ul>
+          <li>Semua paket Basic</li>
+          <li>Microsoft Office</li>
+          <li>Browser + PDF reader</li>
+          <li>Antivirus</li>
+          <li>Software harian</li>
+        </ul>
+        <a class="btn" href="https://wa.me/628561630990?text=Halo%20GTG%20Computer!%20Saya%20mau%20ambil%20paket%20STANDAR%20(Rp100rb)." target="_blank" rel="noopener">Ambil Standar</a>
+      </div>
+      <div class="card price-card">
+        <h3>LENGKAP</h3>
+        <div class="was">Rp200.000</div>
+        <div class="now">Rp150<small>.000</small></div>
+        <ul>
+          <li>Semua paket Standar</li>
+          <li>Backup &amp; restore data</li>
+          <li>Optimasi sistem</li>
+          <li>Bersih virus tuntas</li>
+        </ul>
+        <a class="btn ghost" href="https://wa.me/628561630990?text=Halo%20GTG%20Computer!%20Saya%20mau%20ambil%20paket%20LENGKAP%20(Rp150rb)." target="_blank" rel="noopener">Ambil Lengkap</a>
+      </div>
+    </div>
+    <p class="note">Add-on software design: Rp50rb/software &nbsp;•&nbsp; Home service <b>gratis radius 6 km</b>, di luar itu +Rp25rb &nbsp;•&nbsp; Semua paket <b>garansi 7 hari</b></p>
+  </div>
+</section>
+
+<section id="alur">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Alurnya Gampang</h2>
+      <p>Tiga langkah, komputer beres.</p>
+    </div>
+    <div class="grid c3">
+      <div class="step"><div class="num">1</div><h3>Chat WhatsApp</h3><p>Ceritakan keluhan komputermu, pilih paket, janjian jadwal.</p></div>
+      <div class="step"><div class="num">2</div><h3>Teknisi Datang</h3><p>Dikerjakan di tempatmu — nggak perlu bongkar &amp; bawa PC ke mana-mana.</p></div>
+      <div class="step"><div class="num">3</div><h3>Beres + Garansi</h3><p>Cek bareng sampai puas. Ada masalah dalam 7 hari? Kami balik gratis.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Pertanyaan Umum</h2>
+    </div>
+    <div class="faq-list">
+      <details>
+        <summary>Apakah data saya aman saat instal ulang?</summary>
+        <p>Ya. Di paket Lengkap, data penting dibackup dulu sebelum instal ulang lalu dikembalikan. Untuk paket lain, beri tahu kami file mana yang penting agar ikut diamankan.</p>
+      </details>
+      <details>
+        <summary>Windows apa saja yang bisa diinstal?</summary>
+        <p>Windows 10 dan Windows 11, disesuaikan dengan spesifikasi komputermu agar tetap enteng.</p>
+      </details>
+      <details>
+        <summary>Area mana saja yang dilayani?</summary>
+        <p>Home service area Denpasar dan sekitarnya. Gratis biaya kunjungan untuk radius 6 km, di luar itu tambah Rp25rb.</p>
+      </details>
+      <details>
+        <summary>Bagaimana garansinya?</summary>
+        <p>Semua paket bergaransi 7 hari. Kalau ada kendala terkait pengerjaan kami dalam masa garansi, teknisi datang lagi gratis.</p>
+      </details>
+      <details>
+        <summary>Berapa lama pengerjaannya?</summary>
+        <p>Dikerjakan sampai beres di tempat dalam satu kunjungan. Estimasi waktu pasti dikasih tahu di awal via WhatsApp setelah tahu kondisinya.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta-banner">
+      <h2>Komputermu Butuh Ditolong Hari Ini?</h2>
+      <p>Chat sekarang, janjian jadwal, teknisi datang ke lokasimu.</p>
+      <a class="btn" href="https://wa.me/628561630990?text=Halo%20GTG%20Computer!%20Saya%20mau%20konsultasi%20dulu." target="_blank" rel="noopener">Chat WhatsApp Sekarang</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <b>GTG Computer</b> — Jasa instal ulang komputer panggilan Denpasar, Bali.<br>
+    WA 0856-1630-990 &nbsp;•&nbsp; Garansi 7 hari
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/628561630990?text=Halo%20GTG%20Computer!" target="_blank" rel="noopener" aria-label="Chat WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1112 20.2zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 01-3.4-3c-.3-.4 0-.5.1-.7l.4-.5c.1-.2.1-.3 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.2-.7.3-.9.9-1.1 2.2-.2 3.9a11.6 11.6 0 004.5 4.2c1.7.8 2.4.9 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.1-.5-.2z"/></svg>
+</a>
+
+</body>
+</html>
