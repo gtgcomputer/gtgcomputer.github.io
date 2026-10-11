@@ -12,6 +12,7 @@
   --bg:#eef2f7; --card:#ffffff; --text:#0f172a; --muted:#64748b;
   --accent:#1d4ed8; --accent-d:#1e40af; --ok:#16a34a; --warn:#d97706;
   --danger:#dc2626; --line:#e2e8f0; --chip:#f1f5f9;
+  --input:#ffffff; --code:#f8fafc;
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
 body{margin:0; font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh}
@@ -24,7 +25,7 @@ body{margin:0; font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:
 .login-card p{margin:0 0 20px; color:var(--muted); font-size:14px}
 .field{margin-bottom:14px}
 .field label{display:block; font-size:13px; font-weight:600; margin-bottom:6px}
-.field input,.field select,.field textarea{width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; font-size:15px; font-family:inherit; background:#fff; color:var(--text)}
+.field input,.field select,.field textarea{width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; font-size:15px; font-family:inherit; background:var(--input); color:var(--text)}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none; border-color:var(--accent)}
 .field textarea{min-height:90px; resize:vertical}
 .btn{display:block; width:100%; padding:13px; border:none; border-radius:12px; background:var(--accent); color:#fff; font-size:15px; font-weight:700; font-family:inherit; cursor:pointer}
@@ -59,9 +60,9 @@ body{margin:0; font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:
 .chip.rendah{background:#f8fafc; color:#94a3b8}
 .fab{position:fixed; right:18px; bottom:22px; z-index:30; width:60px; height:60px; border-radius:50%; border:none; background:var(--accent); color:#fff; font-size:30px; line-height:1; cursor:pointer; box-shadow:0 8px 24px rgba(29,78,216,.45)}
 .filters{display:flex; gap:8px; overflow-x:auto; margin-bottom:14px; padding-bottom:2px}
-.filters button{flex:0 0 auto; border:1.5px solid var(--line); background:#fff; padding:8px 14px; border-radius:99px; font-family:inherit; font-size:13px; font-weight:600; color:var(--muted); cursor:pointer}
+.filters button{flex:0 0 auto; border:1.5px solid var(--line); background:var(--card); color:var(--text); padding:8px 14px; border-radius:99px; font-family:inherit; font-size:13px; font-weight:600; cursor:pointer}
 .filters button.active{background:#0f172a; color:#fff; border-color:#0f172a}
-.search{width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; font-size:15px; font-family:inherit; margin-bottom:14px; background:#fff}
+.search{width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; font-size:15px; font-family:inherit; margin-bottom:14px; background:var(--input); color:var(--text)}
 .kpis{display:grid; grid-template-columns:1fr 1fr; gap:12px}
 .kpi{background:var(--card); border-radius:16px; padding:16px; box-shadow:0 1px 3px rgba(15,23,42,.07)}
 .kpi .v{font-size:24px; font-weight:800}
@@ -71,19 +72,19 @@ body{margin:0; font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:
 .danger-link{background:none; border:none; color:var(--danger); font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; padding:6px 0}
 /* ---------- modal ---------- */
 .overlay{position:fixed; inset:0; z-index:50; background:rgba(15,23,42,.55); display:flex; align-items:flex-end; justify-content:center}
-.sheet{background:#fff; width:100%; max-width:560px; max-height:92vh; overflow-y:auto; border-radius:22px 22px 0 0; padding:20px 18px 28px}
+.sheet{background:var(--card); width:100%; max-width:560px; max-height:92vh; overflow-y:auto; border-radius:22px 22px 0 0; padding:20px 18px 28px}
 @media(min-width:640px){.overlay{align-items:center; padding:20px}.sheet{border-radius:22px}}
 .sheet h3{margin:0 0 16px; font-size:18px; font-weight:800}
 .sheet .actions{display:flex; gap:10px; margin-top:6px}
 .sheet .actions .btn{margin:0}
 .logitem{border-top:1px solid var(--line); padding:10px 2px; font-size:13px}
 .logitem .m{color:var(--muted); font-size:12px}
-select.status-sel{padding:8px 10px; border-radius:10px; border:1.5px solid var(--line); font-family:inherit; font-size:13px; font-weight:600}
+select.status-sel{padding:8px 10px; border-radius:10px; border:1.5px solid var(--line); font-family:inherit; font-size:13px; font-weight:600; background:var(--input); color:var(--text)}
 .empty{text-align:center; color:var(--muted); padding:36px 10px; font-size:14px}
-pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height:1.65; background:#f8fafc; border-radius:10px; padding:10px 12px; margin:8px 0 0}
+pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height:1.65; background:var(--code); border-radius:10px; padding:10px 12px; margin:8px 0 0}
 /* ---------- form catatan kerja ---------- */
 .logform{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
-.logform input{padding:10px 12px; border:1.5px solid var(--line); border-radius:10px; font-family:inherit; font-size:13px}
+.logform input{padding:10px 12px; border:1.5px solid var(--line); border-radius:10px; font-family:inherit; font-size:13px; background:var(--input); color:var(--text)}
 .logform .grow{flex:2 1 140px}
 .logform .narrow{flex:1 1 64px; max-width:110px}
 /* ---------- RESPONSIVE ---------- */
@@ -105,6 +106,31 @@ pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height
   .maincol{flex:1; min-width:0}
   .page{max-width:none}
 }
+/* ---------- SIDEBAR GELAP ala dashboard (desktop) ---------- */
+@media(min-width:1024px){
+  .tabs{background:#0c1428; border-right-color:#1c2947}
+  .tabs button{color:#8ea0b8}
+  .tabs button:hover{color:#fff}
+  .tabs button.active{color:#fff; background:rgba(129,140,248,.14)}
+}
+/* ---------- DARK MODE mengikuti sistem (seperti Dashboard Kerja) ---------- */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b1120; --card:#16203a; --text:#e9eff8; --muted:#8ea0b8;
+    --accent:#818cf8; --accent-d:#6366f1;
+    --line:#263350; --chip:#1c2947; --input:#0e1730; --code:#0e1730;
+  }
+  .login-card{background:#16203a; border:1px solid var(--line)}
+  .err{background:#3b1116; border-color:#7f1d1d; color:#fca5a5}
+  .chip.baru{background:#1e3a8a; color:#bfdbfe}
+  .chip.dikerjakan{background:#78350f; color:#fde68a}
+  .chip.menunggu{background:#581c87; color:#e9d5ff}
+  .chip.selesai{background:#14532d; color:#bbf7d0}
+  .chip.tinggi,.chip.kritis{background:#7f1d1d; color:#fecaca}
+  .fab{box-shadow:0 8px 24px rgba(99,102,241,.5)}
+  .kpi{border-top-color:var(--accent)}
+}
+.kpi{border-top:3px solid var(--accent)}
 </style>
 </head>
 <body>
