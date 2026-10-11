@@ -81,6 +81,30 @@ body{margin:0; font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:
 select.status-sel{padding:8px 10px; border-radius:10px; border:1.5px solid var(--line); font-family:inherit; font-size:13px; font-weight:600}
 .empty{text-align:center; color:var(--muted); padding:36px 10px; font-size:14px}
 pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height:1.65; background:#f8fafc; border-radius:10px; padding:10px 12px; margin:8px 0 0}
+/* ---------- form catatan kerja ---------- */
+.logform{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+.logform input{padding:10px 12px; border:1.5px solid var(--line); border-radius:10px; font-family:inherit; font-size:13px}
+.logform .grow{flex:2 1 140px}
+.logform .narrow{flex:1 1 64px; max-width:110px}
+/* ---------- RESPONSIVE ---------- */
+.applayout{display:block}
+.maincol{min-width:0}
+@media(min-width:768px){
+  .page{padding:24px 24px 96px}
+  .kpis{grid-template-columns:repeat(4,1fr)}
+  #ticketList,#clientList,#rbList,#remList{display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start}
+  #ticketList .card,#clientList .card,#rbList .card,#remList .card{margin-bottom:0}
+  .fab{right:28px; bottom:32px}
+}
+@media(min-width:1024px){
+  .applayout{display:flex; align-items:flex-start; max-width:1240px; margin:0 auto}
+  .tabs{flex-direction:column; width:212px; flex:0 0 212px; height:calc(100vh - 53px);
+    border-bottom:none; border-right:1px solid var(--line); padding:14px 0; overflow-x:visible}
+  .tabs button{border-bottom:none; border-left:3px solid transparent; text-align:left; padding:13px 22px}
+  .tabs button.active{border-left-color:var(--accent)}
+  .maincol{flex:1; min-width:0}
+  .page{max-width:none}
+}
 </style>
 </head>
 <body>
@@ -103,13 +127,15 @@ pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height
     <div class="brand">GTG <span>Admin</span></div>
     <button onclick="doLogout()">Keluar</button>
   </div>
-  <div class="tabs">
+  <div class="applayout">
+  <nav class="tabs">
     <button data-tab="tiket" class="active" onclick="goTab('tiket')">Tiket</button>
     <button data-tab="klien" onclick="goTab('klien')">Klien</button>
     <button data-tab="runbook" onclick="goTab('runbook')">Runbook</button>
     <button data-tab="ingat" onclick="goTab('ingat')">Pengingat</button>
     <button data-tab="kpi" onclick="goTab('kpi')">KPI</button>
-  </div>
+  </nav>
+  <div class="maincol">
 
   <div id="tab-tiket" class="page">
     <div class="filters" id="statusFilters">
@@ -148,6 +174,8 @@ pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height
     <div style="height:14px"></div>
     <div class="card"><div class="t">Tiket terbaru</div><div id="kpiRecent" class="m"></div></div>
   </div>
+  </div><!-- /maincol -->
+  </div><!-- /applayout -->
 </div>
 
 <!-- ============ SHEETS (modal) ============ -->
@@ -179,10 +207,10 @@ pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height
     </div>
     <div class="t" style="font-weight:800;margin:14px 0 6px">Catatan kerja</div>
     <div id="tdLogs"></div>
-    <div class="row" style="margin-top:10px">
-      <input id="logNote" placeholder="Catatan..." style="flex:2;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:13px">
-      <input id="logMin" type="number" min="0" placeholder="mnt" style="width:64px;padding:10px 8px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:13px">
-      <input id="logCost" type="number" min="0" placeholder="Rp" style="width:90px;padding:10px 8px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:13px">
+    <div class="logform">
+      <input id="logNote" class="grow" placeholder="Catatan...">
+      <input id="logMin" class="narrow" type="number" min="0" placeholder="mnt">
+      <input id="logCost" class="narrow" type="number" min="0" placeholder="Rp">
       <button class="btn small" onclick="addWorkLog()">+</button>
     </div>
     <div class="actions" style="margin-top:16px">
