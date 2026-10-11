@@ -159,6 +159,24 @@ pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height
   .sidefoot{display:flex; align-items:center; gap:8px; padding:16px 22px; font-size:12px; color:var(--sidebar-text); margin-top:auto}
   .sidefoot .dot{width:8px; height:8px; border-radius:50%; background:#22c55e}
 }
+/* ---------- ikon nav ---------- */
+.tabs button svg{width:22px; height:22px; flex:0 0 auto}
+/* ---------- BOTTOM NAVBAR modern (mobile & tablet) ---------- */
+@media(max-width:1023px){
+  .tabs{position:fixed; top:auto; bottom:0; left:0; right:0; z-index:40;
+    border-bottom:none; border-top:1px solid var(--line);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom)); justify-content:space-around}
+  .tabs button{flex:1 1 0; min-width:0; display:flex; flex-direction:column; align-items:center; gap:4px;
+    padding:9px 2px 7px; font-size:11px; border-bottom:none; border-top:3px solid transparent}
+  .tabs button.active{border-top-color:var(--accent)}
+  .tabs button span{max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .fab{bottom:96px; right:16px}
+  .page{padding-bottom:124px}
+}
+@media(min-width:1024px){
+  .tabs button{display:flex; align-items:center; gap:12px}
+  .tabs button svg{width:20px; height:20px}
+}
 </style>
 </head>
 <body>
@@ -184,11 +202,11 @@ pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height
   <div class="applayout">
   <nav class="tabs">
     <div class="sidebrand"><span class="badge">GA</span><span class="sname">GTG Admin</span></div>
-    <button data-tab="hariini" class="active" onclick="goTab('hariini')">Hari ini</button>
-    <button data-tab="tiket" onclick="goTab('tiket')">Semua tiket</button>
-    <button data-tab="klien" onclick="goTab('klien')">Klien &amp; perangkat</button>
-    <button data-tab="runbook" onclick="goTab('runbook')">Runbook</button>
-    <button data-tab="kpi" onclick="goTab('kpi')">Ringkasan</button>
+    <button data-tab="hariini" class="active" onclick="goTab('hariini')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span>Hari ini</span></button>
+    <button data-tab="tiket" onclick="goTab('tiket')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg><span>Semua tiket</span></button>
+    <button data-tab="klien" onclick="goTab('klien')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Klien</span></button>
+    <button data-tab="runbook" onclick="goTab('runbook')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>Runbook</span></button>
+    <button data-tab="kpi" onclick="goTab('kpi')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg><span>Ringkasan</span></button>
     <div class="sidefoot"><span class="dot"></span>Data pribadi</div>
   </nav>
   <div class="maincol">
