@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — GTG Computer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#eef2f7; --card:#ffffff; --text:#0f172a; --muted:#64748b;
+  --accent:#1d4ed8; --accent-d:#1e40af; --ok:#16a34a; --warn:#d97706;
+  --danger:#dc2626; --line:#e2e8f0; --chip:#f1f5f9;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+body{margin:0; font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh}
+.hidden{display:none!important}
+/* ---------- login ---------- */
+.login-wrap{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+  background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%)}
+.login-card{background:#fff; border-radius:20px; padding:32px 28px; width:100%; max-width:380px; box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.login-card h1{margin:0 0 4px; font-size:22px; font-weight:800}
+.login-card p{margin:0 0 20px; color:var(--muted); font-size:14px}
+.field{margin-bottom:14px}
+.field label{display:block; font-size:13px; font-weight:600; margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; font-size:15px; font-family:inherit; background:#fff; color:var(--text)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none; border-color:var(--accent)}
+.field textarea{min-height:90px; resize:vertical}
+.btn{display:block; width:100%; padding:13px; border:none; border-radius:12px; background:var(--accent); color:#fff; font-size:15px; font-weight:700; font-family:inherit; cursor:pointer}
+.btn:active{background:var(--accent-d)}
+.btn.ghost{background:var(--chip); color:var(--text)}
+.btn.danger{background:var(--danger)}
+.btn.small{width:auto; padding:8px 14px; font-size:13px; border-radius:10px}
+.err{background:#fef2f2; color:var(--danger); border:1px solid #fecaca; padding:10px 12px; border-radius:10px; font-size:13px; margin-bottom:14px}
+/* ---------- app shell ---------- */
+.topbar{position:sticky; top:0; z-index:20; background:#0f172a; color:#fff; padding:12px 16px; display:flex; align-items:center; justify-content:space-between}
+.topbar .brand{font-weight:800; font-size:16px}
+.topbar .brand span{color:#93c5fd}
+.topbar button{background:rgba(255,255,255,.12); color:#fff; border:none; padding:8px 14px; border-radius:10px; font-family:inherit; font-size:13px; font-weight:600; cursor:pointer}
+.tabs{position:sticky; top:53px; z-index:19; background:var(--card); border-bottom:1px solid var(--line); display:flex; overflow-x:auto; padding:0 8px}
+.tabs button{flex:1 0 auto; background:none; border:none; padding:14px 16px; font-family:inherit; font-size:14px; font-weight:600; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; white-space:nowrap}
+.tabs button.active{color:var(--accent); border-bottom-color:var(--accent)}
+.page{padding:16px 14px 96px; max-width:860px; margin:0 auto}
+.pagehead{display:flex; align-items:center; justify-content:space-between; margin:4px 2px 14px}
+.pagehead h2{margin:0; font-size:19px; font-weight:800}
+.card{background:var(--card); border-radius:16px; padding:14px 15px; margin-bottom:12px; box-shadow:0 1px 3px rgba(15,23,42,.07)}
+.card .t{font-weight:700; font-size:15px; margin-bottom:4px}
+.card .m{color:var(--muted); font-size:13px; line-height:1.5}
+.row{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.spread{justify-content:space-between}
+.chip{display:inline-block; padding:4px 11px; border-radius:99px; font-size:12px; font-weight:700; background:var(--chip); color:var(--muted)}
+.chip.baru{background:#dbeafe; color:#1d4ed8}
+.chip.dikerjakan{background:#fef3c7; color:#b45309}
+.chip.menunggu{background:#f3e8ff; color:#7e22ce}
+.chip.selesai{background:#dcfce7; color:#15803d}
+.chip.tinggi,.chip.kritis{background:#fee2e2; color:#b91c1c}
+.chip.normal{background:#f1f5f9; color:#475569}
+.chip.rendah{background:#f8fafc; color:#94a3b8}
+.fab{position:fixed; right:18px; bottom:22px; z-index:30; width:60px; height:60px; border-radius:50%; border:none; background:var(--accent); color:#fff; font-size:30px; line-height:1; cursor:pointer; box-shadow:0 8px 24px rgba(29,78,216,.45)}
+.filters{display:flex; gap:8px; overflow-x:auto; margin-bottom:14px; padding-bottom:2px}
+.filters button{flex:0 0 auto; border:1.5px solid var(--line); background:#fff; padding:8px 14px; border-radius:99px; font-family:inherit; font-size:13px; font-weight:600; color:var(--muted); cursor:pointer}
+.filters button.active{background:#0f172a; color:#fff; border-color:#0f172a}
+.search{width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; font-size:15px; font-family:inherit; margin-bottom:14px; background:#fff}
+.kpis{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.kpi{background:var(--card); border-radius:16px; padding:16px; box-shadow:0 1px 3px rgba(15,23,42,.07)}
+.kpi .v{font-size:24px; font-weight:800}
+.kpi .l{font-size:12px; color:var(--muted); margin-top:4px}
+.wa-btn{display:inline-block; background:#22c55e; color:#fff; text-decoration:none; padding:8px 14px; border-radius:10px; font-size:13px; font-weight:700}
+.linklike{background:none; border:none; color:var(--accent); font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; padding:6px 0}
+.danger-link{background:none; border:none; color:var(--danger); font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; padding:6px 0}
+/* ---------- modal ---------- */
+.overlay{position:fixed; inset:0; z-index:50; background:rgba(15,23,42,.55); display:flex; align-items:flex-end; justify-content:center}
+.sheet{background:#fff; width:100%; max-width:560px; max-height:92vh; overflow-y:auto; border-radius:22px 22px 0 0; padding:20px 18px 28px}
+@media(min-width:640px){.overlay{align-items:center; padding:20px}.sheet{border-radius:22px}}
+.sheet h3{margin:0 0 16px; font-size:18px; font-weight:800}
+.sheet .actions{display:flex; gap:10px; margin-top:6px}
+.sheet .actions .btn{margin:0}
+.logitem{border-top:1px solid var(--line); padding:10px 2px; font-size:13px}
+.logitem .m{color:var(--muted); font-size:12px}
+select.status-sel{padding:8px 10px; border-radius:10px; border:1.5px solid var(--line); font-family:inherit; font-size:13px; font-weight:600}
+.empty{text-align:center; color:var(--muted); padding:36px 10px; font-size:14px}
+pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height:1.65; background:#f8fafc; border-radius:10px; padding:10px 12px; margin:8px 0 0}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginView" class="login-wrap">
+  <div class="login-card">
+    <h1>GTG Admin</h1>
+    <p>Login untuk mengelola tiket &amp; data kerja.</p>
+    <div id="loginErr" class="err hidden"></div>
+    <div class="field"><label>Email</label><input id="email" type="email" autocomplete="username" placeholder="email@contoh.com"></div>
+    <div class="field"><label>Password</label><input id="pass" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="btn" onclick="doLogin()">Masuk</button>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="appView" class="hidden">
+  <div class="topbar">
+    <div class="brand">GTG <span>Admin</span></div>
+    <button onclick="doLogout()">Keluar</button>
+  </div>
+  <div class="tabs">
+    <button data-tab="tiket" class="active" onclick="goTab('tiket')">Tiket</button>
+    <button data-tab="klien" onclick="goTab('klien')">Klien</button>
+    <button data-tab="runbook" onclick="goTab('runbook')">Runbook</button>
+    <button data-tab="ingat" onclick="goTab('ingat')">Pengingat</button>
+    <button data-tab="kpi" onclick="goTab('kpi')">KPI</button>
+  </div>
+
+  <div id="tab-tiket" class="page">
+    <div class="filters" id="statusFilters">
+      <button data-s="semua" class="active" onclick="setStatusFilter('semua')">Semua</button>
+      <button data-s="baru" onclick="setStatusFilter('baru')">Baru</button>
+      <button data-s="dikerjakan" onclick="setStatusFilter('dikerjakan')">Dikerjakan</button>
+      <button data-s="menunggu" onclick="setStatusFilter('menunggu')">Menunggu</button>
+      <button data-s="selesai" onclick="setStatusFilter('selesai')">Selesai</button>
+    </div>
+    <div id="ticketList"></div>
+    <button class="fab" onclick="openSheet('sheetTicket')">+</button>
+  </div>
+
+  <div id="tab-klien" class="page hidden">
+    <div class="pagehead"><h2>Klien</h2></div>
+    <div id="clientList"></div>
+    <button class="fab" onclick="openSheet('sheetClient')">+</button>
+  </div>
+
+  <div id="tab-runbook" class="page hidden">
+    <div class="pagehead"><h2>Runbook</h2></div>
+    <input id="rbSearch" class="search" placeholder="Cari masalah / solusi..." oninput="renderRunbooks()">
+    <div id="rbList"></div>
+    <button class="fab" onclick="openSheet('sheetRunbook')">+</button>
+  </div>
+
+  <div id="tab-ingat" class="page hidden">
+    <div class="pagehead"><h2>Pengingat</h2></div>
+    <div id="remList"></div>
+    <button class="fab" onclick="openSheet('sheetReminder')">+</button>
+  </div>
+
+  <div id="tab-kpi" class="page hidden">
+    <div class="pagehead"><h2>Ringkasan</h2></div>
+    <div class="kpis" id="kpiGrid"></div>
+    <div style="height:14px"></div>
+    <div class="card"><div class="t">Tiket terbaru</div><div id="kpiRecent" class="m"></div></div>
+  </div>
+</div>
+
+<!-- ============ SHEETS (modal) ============ -->
+<div id="sheetTicket" class="overlay hidden" onclick="if(event.target===this)closeSheets()">
+  <div class="sheet">
+    <h3>Tiket baru</h3>
+    <div class="field"><label>Judul masalah</label><input id="tTitle" placeholder="cth: Laptop lemot, install ulang"></div>
+    <div class="field"><label>Klien</label><select id="tClient"><option value="">— Tanpa klien —</option></select></div>
+    <div class="row">
+      <div class="field" style="flex:1"><label>Prioritas</label><select id="tPriority"><option value="rendah">Rendah</option><option value="normal" selected>Normal</option><option value="tinggi">Tinggi</option><option value="kritis">Kritis</option></select></div>
+      <div class="field" style="flex:1"><label>Fee (Rp)</label><input id="tFee" type="number" min="0" value="0"></div>
+    </div>
+    <div class="field"><label>Deskripsi</label><textarea id="tDesc" placeholder="Detail masalah..."></textarea></div>
+    <div class="actions"><button class="btn ghost" onclick="closeSheets()">Batal</button><button class="btn" onclick="saveTicket()">Simpan</button></div>
+  </div>
+</div>
+
+<div id="sheetTicketDetail" class="overlay hidden" onclick="if(event.target===this)closeSheets()">
+  <div class="sheet">
+    <h3 id="tdTitle"></h3>
+    <div class="row" style="margin-bottom:10px"><span id="tdChips" class="row"></span></div>
+    <div class="m" id="tdMeta" style="color:var(--muted);font-size:13px;margin-bottom:8px"></div>
+    <div class="m" id="tdDesc" style="font-size:14px;margin-bottom:12px"></div>
+    <div class="field"><label>Status</label>
+      <select id="tdStatus" class="status-sel" onchange="changeTicketStatus()">
+        <option value="baru">Baru</option><option value="dikerjakan">Dikerjakan</option>
+        <option value="menunggu">Menunggu</option><option value="selesai">Selesai</option>
+      </select>
+    </div>
+    <div class="t" style="font-weight:800;margin:14px 0 6px">Catatan kerja</div>
+    <div id="tdLogs"></div>
+    <div class="row" style="margin-top:10px">
+      <input id="logNote" placeholder="Catatan..." style="flex:2;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:13px">
+      <input id="logMin" type="number" min="0" placeholder="mnt" style="width:64px;padding:10px 8px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:13px">
+      <input id="logCost" type="number" min="0" placeholder="Rp" style="width:90px;padding:10px 8px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:13px">
+      <button class="btn small" onclick="addWorkLog()">+</button>
+    </div>
+    <div class="actions" style="margin-top:16px">
+      <button class="btn ghost" onclick="closeSheets()">Tutup</button>
+      <button class="btn danger" onclick="deleteTicket()">Hapus</button>
+    </div>
+  </div>
+</div>
+
+<div id="sheetClient" class="overlay hidden" onclick="if(event.target===this)closeSheets()">
+  <div class="sheet">
+    <h3>Klien baru</h3>
+    <div class="field"><label>Nama</label><input id="cName" placeholder="Nama klien"></div>
+    <div class="field"><label>WhatsApp</label><input id="cWa" placeholder="cth: 08561630990"></div>
+    <div class="field"><label>Alamat</label><input id="cAddr" placeholder="Alamat"></div>
+    <div class="field"><label>Catatan</label><textarea id="cNotes"></textarea></div>
+    <div class="actions"><button class="btn ghost" onclick="closeSheets()">Batal</button><button class="btn" onclick="saveClient()">Simpan</button></div>
+  </div>
+</div>
+
+<div id="sheetDevice" class="overlay hidden" onclick="if(event.target===this)closeSheets()">
+  <div class="sheet">
+    <h3>Tambah perangkat</h3>
+    <div class="field"><label>Tipe</label><select id="dType"><option>Laptop</option><option>PC</option><option>Printer</option><option>HP</option><option>Lainnya</option></select></div>
+    <div class="row">
+      <div class="field" style="flex:1"><label>Merk</label><input id="dBrand"></div>
+      <div class="field" style="flex:1"><label>Model</label><input id="dModel"></div>
+    </div>
+    <div class="field"><label>Serial number</label><input id="dSerial"></div>
+    <div class="field"><label>Catatan</label><input id="dNotes"></div>
+    <div class="actions"><button class="btn ghost" onclick="closeSheets()">Batal</button><button class="btn" onclick="saveDevice()">Simpan</button></div>
+  </div>
+</div>
+
+<div id="sheetRunbook" class="overlay hidden" onclick="if(event.target===this)closeSheets()">
+  <div class="sheet">
+    <h3>Runbook baru</h3>
+    <div class="field"><label>Judul</label><input id="rTitle" placeholder="cth: Install ulang Windows 11"></div>
+    <div class="field"><label>Kategori</label><input id="rCat" placeholder="cth: install-ulang, jaringan, printer"></div>
+    <div class="field"><label>Masalah</label><textarea id="rProblem" placeholder="Gejala / masalahnya apa"></textarea></div>
+    <div class="field"><label>Langkah-langkah (satu per baris)</label><textarea id="rSteps" style="min-height:130px" placeholder="1. ...&#10;2. ..."></textarea></div>
+    <div class="actions"><button class="btn ghost" onclick="closeSheets()">Batal</button><button class="btn" onclick="saveRunbook()">Simpan</button></div>
+  </div>
+</div>
+
+<div id="sheetReminder" class="overlay hidden" onclick="if(event.target===this)closeSheets()">
+  <div class="sheet">
+    <h3>Pengingat baru</h3>
+    <div class="field"><label>Judul</label><input id="rmTitle" placeholder="cth: Follow-up garansi laptop Bu Ani"></div>
+    <div class="field"><label>Tanggal</label><input id="rmDue" type="date"></div>
+    <div class="actions"><button class="btn ghost" onclick="closeSheets()">Batal</button><button class="btn" onclick="saveReminder()">Simpan</button></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   Konfigurasi Supabase.
+   Catatan keamanan: anon key BOLEH publik (by design).
+   Yang menjaga data adalah Row Level Security di database:
+   hanya user yang login yang bisa baca/tulis.
+   JANGAN pernah taruh service_role key di file ini.
+   ============================================================ */
+const SUPABASE_URL = 'https://wrasowhlqbyjcylfcqvo.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndyYXNvd2hscWJ5amN5bGZjcXZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2NjYyMjYsImV4cCI6MjEwNzI0MjIyNn0.of0clKvl9z1qMKaine9dT7neYtQu36OnnjUh8TysEto';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const rp = n => 'Rp' + Number(n || 0).toLocaleString('id-ID');
+const dt = s => s ? new Date(s).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}) : '-';
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const waNum = w => String(w || '').replace(/[^0-9]/g, '').replace(/^0/, '62');
+
+let statusFilter = 'semua', openTicketId = null, openClientId = null, deviceClientId = null;
+let cache = { tickets: [], clients: [] };
+
+/* ---------- auth ---------- */
+async function doLogin() {
+  const err = document.getElementById('loginErr');
+  err.classList.add('hidden');
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('pass').value;
+  if (!email || !password) { err.textContent = 'Isi email dan password.'; err.classList.remove('hidden'); return; }
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) { err.textContent = 'Gagal masuk: ' + error.message; err.classList.remove('hidden'); return; }
+  enterApp();
+}
+async function doLogout() { await sb.auth.signOut(); location.reload(); }
+async function enterApp() {
+  document.getElementById('loginView').classList.add('hidden');
+  document.getElementById('appView').classList.remove('hidden');
+  await loadAll();
+}
+function openSheet(id) { closeSheets(); document.getElementById(id).classList.remove('hidden'); }
+function closeSheets() { document.querySelectorAll('.overlay').forEach(o => o.classList.add('hidden')); }
+function goTab(name) {
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  ['tiket','klien','runbook','ingat','kpi'].forEach(t => document.getElementById('tab-' + t).classList.toggle('hidden', t !== name));
+  if (name === 'kpi') renderKpi();
+}
+
+/* ---------- data ---------- */
+async function loadAll() {
+  const [t, c] = await Promise.all([
+    sb.from('tickets').select('*, clients(name)').order('created_at', { ascending: false }),
+    sb.from('clients').select('*').order('name')
+  ]);
+  cache.tickets = t.data || []; cache.clients = c.data || [];
+  renderTickets(); renderClients(); renderRunbooks(); renderReminders();
+  const sel = document.getElementById('tClient');
+  sel.innerHTML = '<option value="">— Tanpa klien —</option>' + cache.clients.map(x =>
+    '<option value="' + x.id + '">' + esc(x.name) + '</option>').join('');
+}
+
+/* ---------- tiket ---------- */
+function setStatusFilter(s) {
+  statusFilter = s;
+  document.querySelectorAll('#statusFilters button').forEach(b => b.classList.toggle('active', b.dataset.s === s));
+  renderTickets();
+}
+function renderTickets() {
+  const list = document.getElementById('ticketList');
+  const rows = cache.tickets.filter(t => statusFilter === 'semua' || t.status === statusFilter);
+  if (!rows.length) { list.innerHTML = '<div class="empty">Belum ada tiket.</div>'; return; }
+  list.innerHTML = rows.map(t =>
+    '<div class="card" onclick="openTicket(\'' + t.id + '\')" style="cursor:pointer">' +
+    '<div class="row spread"><div class="t">#' + t.no + ' ' + esc(t.title) + '</div></div>' +
+    '<div class="row" style="margin:8px 0"><span class="chip ' + t.status + '">' + t.status + '</span>' +
+    '<span class="chip ' + t.priority + '">' + t.priority + '</span>' +
+    (t.fee > 0 ? '<span class="chip">' + rp(t.fee) + '</span>' : '') + '</div>' +
+    '<div class="m">' + esc(t.clients ? t.clients.name : 'Tanpa klien') + ' · ' + dt(t.created_at) + '</div>' +
+    '</div>').join('');
+}
+async function saveTicket() {
+  const title = document.getElementById('tTitle').value.trim();
+  if (!title) { alert('Judul wajib diisi'); return; }
+  const { error } = await sb.from('tickets').insert({
+    title,
+    client_id: document.getElementById('tClient').value || null,
+    priority: document.getElementById('tPriority').value,
+    fee: Number(document.getElementById('tFee').value) || 0,
+    description: document.getElementById('tDesc').value.trim() || null
+  });
+  if (error) { alert('Gagal: ' + error.message); return; }
+  ['tTitle','tDesc'].forEach(i => document.getElementById(i).value = '');
+  document.getElementById('tFee').value = 0;
+  closeSheets(); loadAll();
+}
+async function openTicket(id) {
+  openTicketId = id;
+  const t = cache.tickets.find(x => x.id === id);
+  document.getElementById('tdTitle').textContent = '#' + t.no + ' ' + t.title;
+  document.getElementById('tdChips').innerHTML =
+    '<span class="chip ' + t.priority + '">' + t.priority + '</span>' +
+    (t.fee > 0 ? '<span class="chip">' + rp(t.fee) + '</span>' : '');
+  document.getElementById('tdMeta').textContent =
+    (t.clients ? t.clients.name : 'Tanpa klien') + ' · dibuat ' + dt(t.created_at) +
+    (t.resolved_at ? ' · selesai ' + dt(t.resolved_at) : '');
+  document.getElementById('tdDesc').textContent = t.description || '';
+  document.getElementById('tdStatus').value = t.status;
+  const { data } = await sb.from('work_logs').select('*').eq('ticket_id', id).order('logged_at', { ascending: false });
+  document.getElementById('tdLogs').innerHTML = (data && data.length)
+    ? data.map(l => '<div class="logitem">' + esc(l.note || '') +
+      '<div class="m">' + (l.duration_minutes ? l.duration_minutes + ' mnt · ' : '') +
+      (l.cost ? rp(l.cost) + ' · ' : '') + dt(l.logged_at) + '</div></div>').join('')
+    : '<div class="m">Belum ada catatan.</div>';
+  openSheet('sheetTicketDetail');
+}
+async function changeTicketStatus() {
+  const v = document.getElementById('tdStatus').value;
+  const patch = { status: v };
+  if (v === 'selesai') patch.resolved_at = new Date().toISOString();
+  const { error } = await sb.from('tickets').update(patch).eq('id', openTicketId);
+  if (!error) loadAll();
+}
+async function addWorkLog() {
+  const note = document.getElementById('logNote').value.trim();
+  const duration_minutes = Number(document.getElementById('logMin').value) || 0;
+  const cost = Number(document.getElementById('logCost').value) || 0;
+  if (!note && !duration_minutes && !cost) return;
+  const { error } = await sb.from('work_logs').insert({ ticket_id: openTicketId, note: note || null, duration_minutes, cost });
+  if (!error) {
+    document.getElementById('logNote').value = '';
+    document.getElementById('logMin').value = '';
+    document.getElementById('logCost').value = '';
+    openTicket(openTicketId);
+  }
+}
+async function deleteTicket() {
+  if (!confirm('Hapus tiket ini?')) return;
+  await sb.from('tickets').delete().eq('id', openTicketId);
+  closeSheets(); loadAll();
+}
+
+/* ---------- klien & perangkat ---------- */
+function renderClients() {
+  const list = document.getElementById('clientList');
+  if (!cache.clients.length) { list.innerHTML = '<div class="empty">Belum ada klien.</div>'; return; }
+  list.innerHTML = cache.clients.map(c =>
+    '<div class="card"><div class="row spread"><div class="t">' + esc(c.name) + '</div>' +
+    (c.whatsapp ? '<a class="wa-btn" href="https://wa.me/' + waNum(c.whatsapp) + '" target="_blank">WA</a>' : '') + '</div>' +
+    (c.address ? '<div class="m">' + esc(c.address) + '</div>' : '') +
+    '<div class="row" style="margin-top:8px"><button class="linklike" onclick="toggleDevices(\'' + c.id + '\')">Perangkat</button>' +
+    '<button class="danger-link" onclick="deleteClient(\'' + c.id + '\')">Hapus</button></div>' +
+    '<div id="dev-' + c.id + '" class="hidden"></div></div>').join('');
+}
+async function saveClient() {
+  const name = document.getElementById('cName').value.trim();
+  if (!name) { alert('Nama wajib diisi'); return; }
+  const { error } = await sb.from('clients').insert({
+    name, whatsapp: document.getElementById('cWa').value.trim() || null,
+    address: document.getElementById('cAddr').value.trim() || null,
+    notes: document.getElementById('cNotes').value.trim() || null
+  });
+  if (error) { alert('Gagal: ' + error.message); return; }
+  ['cName','cWa','cAddr','cNotes'].forEach(i => document.getElementById(i).value = '');
+  closeSheets(); loadAll();
+}
+async function deleteClient(id) {
+  if (!confirm('Hapus klien ini? (perangkatnya ikut terhapus)')) return;
+  await sb.from('clients').delete().eq('id', id);
+  loadAll();
+}
+async function toggleDevices(clientId) {
+  const box = document.getElementById('dev-' + clientId);
+  if (!box.classList.contains('hidden')) { box.classList.add('hidden'); return; }
+  const { data } = await sb.from('devices').select('*').eq('client_id', clientId).order('created_at');
+  box.innerHTML = (data && data.length ? data.map(d =>
+    '<div class="logitem"><b>' + esc(d.type) + '</b> ' + esc([d.brand, d.model].filter(Boolean).join(' ')) +
+    (d.serial ? ' <span class="m">SN: ' + esc(d.serial) + '</span>' : '') + '</div>').join('')
+    : '<div class="m">Belum ada perangkat.</div>') +
+    '<button class="linklike" onclick="openDeviceSheet(\'' + clientId + '\')">+ Tambah perangkat</button>';
+  box.classList.remove('hidden');
+}
+function openDeviceSheet(clientId) { deviceClientId = clientId; openSheet('sheetDevice'); }
+async function saveDevice() {
+  const { error } = await sb.from('devices').insert({
+    client_id: deviceClientId, type: document.getElementById('dType').value,
+    brand: document.getElementById('dBrand').value.trim() || null,
+    model: document.getElementById('dModel').value.trim() || null,
+    serial: document.getElementById('dSerial').value.trim() || null,
+    notes: document.getElementById('dNotes').value.trim() || null
+  });
+  if (error) { alert('Gagal: ' + error.message); return; }
+  ['dBrand','dModel','dSerial','dNotes'].forEach(i => document.getElementById(i).value = '');
+  closeSheets();
+  const box = document.getElementById('dev-' + deviceClientId);
+  box.classList.add('hidden'); toggleDevices(deviceClientId);
+}
+
+/* ---------- runbook ---------- */
+async function renderRunbooks() {
+  const q = (document.getElementById('rbSearch').value || '').toLowerCase();
+  const { data } = await sb.from('runbooks').select('*').order('updated_at', { ascending: false });
+  const rows = (data || []).filter(r => !q ||
+    (r.title + ' ' + (r.problem || '') + ' ' + (r.steps || '') + ' ' + (r.category || '')).toLowerCase().includes(q));
+  document.getElementById('rbList').innerHTML = rows.length ? rows.map(r =>
+    '<div class="card"><div class="t">' + esc(r.title) + '</div>' +
+    (r.category ? '<div style="margin:6px 0"><span class="chip">' + esc(r.category) + '</span></div>' : '') +
+    (r.problem ? '<div class="m">' + esc(r.problem) + '</div>' : '') +
+    (r.steps ? '<pre class="steps">' + esc(r.steps) + '</pre>' : '') +
+    '<button class="danger-link" onclick="deleteRunbook(\'' + r.id + '\')">Hapus</button></div>').join('')
+    : '<div class="empty">Belum ada runbook.</div>';
+}
+async function saveRunbook() {
+  const title = document.getElementById('rTitle').value.trim();
+  if (!title) { alert('Judul wajib diisi'); return; }
+  const { error } = await sb.from('runbooks').insert({
+    title, category: document.getElementById('rCat').value.trim() || null,
+    problem: document.getElementById('rProblem').value.trim() || null,
+    steps: document.getElementById('rSteps').value.trim() || null
+  });
+  if (error) { alert('Gagal: ' + error.message); return; }
+  ['rTitle','rCat','rProblem','rSteps'].forEach(i => document.getElementById(i).value = '');
+  closeSheets(); renderRunbooks();
+}
+async function deleteRunbook(id) {
+  if (!confirm('Hapus runbook ini?')) return;
+  await sb.from('runbooks').delete().eq('id', id);
+  renderRunbooks();
+}
+
+/* ---------- pengingat ---------- */
+async function renderReminders() {
+  const { data } = await sb.from('reminders').select('*').order('due_at', { ascending: true });
+  const rows = data || [];
+  const open = rows.filter(r => !r.done), done = rows.filter(r => r.done);
+  const item = r =>
+    '<div class="card"><div class="row spread"><div class="t" style="' + (r.done ? 'text-decoration:line-through;color:var(--muted)' : '') + '">' +
+    esc(r.title) + '</div><input type="checkbox" ' + (r.done ? 'checked' : '') +
+    ' onchange="toggleReminder(\'' + r.id + '\', this.checked)" style="width:22px;height:22px"></div>' +
+    '<div class="m">' + dt(r.due_at) + '</div>' +
+    '<button class="danger-link" onclick="deleteReminder(\'' + r.id + '\')">Hapus</button></div>';
+  document.getElementById('remList').innerHTML =
+    (open.length ? open.map(item).join('') : '<div class="empty">Tidak ada pengingat aktif.</div>') +
+    (done.length ? '<div class="t" style="font-weight:800;margin:16px 2px 8px">Selesai</div>' + done.map(item).join('') : '');
+}
+async function saveReminder() {
+  const title = document.getElementById('rmTitle').value.trim();
+  if (!title) { alert('Judul wajib diisi'); return; }
+  const { error } = await sb.from('reminders').insert({
+    title, due_at: document.getElementById('rmDue').value || null
+  });
+  if (error) { alert('Gagal: ' + error.message); return; }
+  document.getElementById('rmTitle').value = ''; document.getElementById('rmDue').value = '';
+  closeSheets(); renderReminders();
+}
+async function toggleReminder(id, done) {
+  await sb.from('reminders').update({ done }).eq('id', id);
+  renderReminders();
+}
+async function deleteReminder(id) {
+  if (!confirm('Hapus pengingat ini?')) return;
+  await sb.from('reminders').delete().eq('id', id);
+  renderReminders();
+}
+
+/* ---------- KPI ---------- */
+function renderKpi() {
+  const ts = cache.tickets;
+  const aktif = ts.filter(t => t.status !== 'selesai').length;
+  const m0 = new Date(); m0.setDate(1); m0.setHours(0, 0, 0, 0);
+  const bulanIni = ts.filter(t => t.status === 'selesai' && t.resolved_at && new Date(t.resolved_at) >= m0);
+  const pendapatan = bulanIni.reduce((a, t) => a + Number(t.fee || 0), 0);
+  document.getElementById('kpiGrid').innerHTML =
+    '<div class="kpi"><div class="v">' + aktif + '</div><div class="l">Tiket aktif</div></div>' +
+    '<div class="kpi"><div class="v">' + bulanIni.length + '</div><div class="l">Selesai bulan ini</div></div>' +
+    '<div class="kpi"><div class="v">' + rp(pendapatan) + '</div><div class="l">Pendapatan bulan ini</div></div>' +
+    '<div class="kpi"><div class="v">' + cache.clients.length + '</div><div class="l">Total klien</div></div>';
+  document.getElementById('kpiRecent').innerHTML = ts.slice(0, 5).map(t =>
+    '#' + t.no + ' ' + esc(t.title) + ' — ' + t.status).join('<br>') || '-';
+}
+
+/* ---------- init ---------- */
+(async function init() {
+  const { data } = await sb.auth.getSession();
+  if (data.session) enterApp();
+})();
+</script>
+</body>
+</html>
