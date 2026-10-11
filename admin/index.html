@@ -97,8 +97,8 @@ pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height
 @media(min-width:768px){
   .page{padding:24px 24px 96px}
   .kpis{grid-template-columns:repeat(4,1fr)}
-  #ticketList,#clientList,#rbList,#remList{display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start}
-  #ticketList .card,#clientList .card,#rbList .card,#remList .card{margin-bottom:0}
+  #ticketList,#clientList,#rbList{display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start}
+  #ticketList .card,#clientList .card,#rbList .card{margin-bottom:0}
   .fab{right:28px; bottom:32px}
 }
 @media(min-width:1024px){
@@ -141,6 +141,24 @@ pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height
   .fab{box-shadow:0 8px 24px rgba(251,191,36,.45)}
 }
 .kpi{border-top:3px solid var(--accent)}
+/* ---------- HOME ala Dashboard Kerja ---------- */
+.dateline{font-size:13px; color:var(--muted); font-weight:600}
+.bigtitle{margin:2px 0 0; font-size:30px; font-weight:800; letter-spacing:-.5px}
+.homehead{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin:4px 2px 16px}
+.hero{background:#f4f6f9; color:#141a26; border-radius:18px; padding:20px; display:flex; align-items:center; gap:18px; margin-bottom:22px; box-shadow:0 1px 3px rgba(15,23,42,.08); flex-wrap:wrap}
+.heronum{text-align:center; min-width:76px}
+.heronum span{font-size:46px; font-weight:800; color:#d97706; line-height:1}
+.heronum small{display:block; font-size:11px; color:#68768a; margin-top:4px}
+.herotxt{flex:1 1 200px}
+.herotxt .t{font-weight:800; font-size:17px; margin-bottom:4px}
+.herotxt .m{font-size:13px; color:#68768a}
+.homegrid{display:grid; gap:20px}
+@media(min-width:768px){ .homegrid{grid-template-columns:1.35fr 1fr} }
+.sidefoot{display:none}
+@media(min-width:1024px){
+  .sidefoot{display:flex; align-items:center; gap:8px; padding:16px 22px; font-size:12px; color:var(--sidebar-text); margin-top:auto}
+  .sidefoot .dot{width:8px; height:8px; border-radius:50%; background:#22c55e}
+}
 </style>
 </head>
 <body>
@@ -166,15 +184,38 @@ pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height
   <div class="applayout">
   <nav class="tabs">
     <div class="sidebrand"><span class="badge">GA</span><span class="sname">GTG Admin</span></div>
-    <button data-tab="tiket" class="active" onclick="goTab('tiket')">Tiket</button>
-    <button data-tab="klien" onclick="goTab('klien')">Klien</button>
+    <button data-tab="hariini" class="active" onclick="goTab('hariini')">Hari ini</button>
+    <button data-tab="tiket" onclick="goTab('tiket')">Semua tiket</button>
+    <button data-tab="klien" onclick="goTab('klien')">Klien &amp; perangkat</button>
     <button data-tab="runbook" onclick="goTab('runbook')">Runbook</button>
-    <button data-tab="ingat" onclick="goTab('ingat')">Pengingat</button>
-    <button data-tab="kpi" onclick="goTab('kpi')">KPI</button>
+    <button data-tab="kpi" onclick="goTab('kpi')">Ringkasan</button>
+    <div class="sidefoot"><span class="dot"></span>Data pribadi</div>
   </nav>
   <div class="maincol">
 
-  <div id="tab-tiket" class="page">
+  <div id="tab-hariini" class="page">
+    <div class="homehead">
+      <div><div class="dateline" id="dateLine"></div><div class="bigtitle">Hari ini</div></div>
+      <button class="btn small" onclick="openSheet('sheetTicket')">+ Tiket</button>
+    </div>
+    <div class="hero">
+      <div class="heronum"><span id="heroCount">0</span><small>pekerjaan aktif</small></div>
+      <div class="herotxt"><div class="t" id="heroTitle">Meja kerja siap.</div><div class="m">Catat permintaan dari WhatsApp, telepon, atau klien datang.</div></div>
+      <button class="btn small" onclick="openSheet('sheetTicket')">Catat permintaan</button>
+    </div>
+    <div class="homegrid">
+      <div>
+        <div class="row spread" style="margin:0 2px 8px"><div style="font-weight:800;font-size:16px">Butuh tindakan</div><button class="linklike" onclick="goTab('tiket')">Lihat semua</button></div>
+        <div class="card" id="homeQueue"></div>
+      </div>
+      <div>
+        <div class="row spread" style="margin:0 2px 8px"><div style="font-weight:800;font-size:16px">Pengingat</div><span id="homeRemCount" style="font-size:12px;color:var(--muted)"></span></div>
+        <div class="card" id="homeRem"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-tiket" class="page hidden">
     <div class="filters" id="statusFilters">
       <button data-s="semua" class="active" onclick="setStatusFilter('semua')">Semua</button>
       <button data-s="baru" onclick="setStatusFilter('baru')">Baru</button>
@@ -197,12 +238,6 @@ pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height
     <input id="rbSearch" class="search" placeholder="Cari masalah / solusi..." oninput="renderRunbooks()">
     <div id="rbList"></div>
     <button class="fab" onclick="openSheet('sheetRunbook')">+</button>
-  </div>
-
-  <div id="tab-ingat" class="page hidden">
-    <div class="pagehead"><h2>Pengingat</h2></div>
-    <div id="remList"></div>
-    <button class="fab" onclick="openSheet('sheetReminder')">+</button>
   </div>
 
   <div id="tab-kpi" class="page hidden">
@@ -250,6 +285,9 @@ pre.steps{white-space:pre-wrap; font-family:inherit; font-size:13px; line-height
       <input id="logCost" class="narrow" type="number" min="0" placeholder="Rp">
       <button class="btn small" onclick="addWorkLog()">+</button>
     </div>
+    <div class="t" style="font-weight:800;margin:16px 0 6px">Pengingat</div>
+    <div id="tdRems"></div>
+    <button class="linklike" onclick="openSheet('sheetReminder')">+ Tambah pengingat</button>
     <div class="actions" style="margin-top:16px">
       <button class="btn ghost" onclick="closeSheets()">Tutup</button>
       <button class="btn danger" onclick="deleteTicket()">Hapus</button>
@@ -343,8 +381,9 @@ function openSheet(id) { closeSheets(); document.getElementById(id).classList.re
 function closeSheets() { document.querySelectorAll('.overlay').forEach(o => o.classList.add('hidden')); }
 function goTab(name) {
   document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
-  ['tiket','klien','runbook','ingat','kpi'].forEach(t => document.getElementById('tab-' + t).classList.toggle('hidden', t !== name));
+  ['hariini','tiket','klien','runbook','kpi'].forEach(t => document.getElementById('tab-' + t).classList.toggle('hidden', t !== name));
   if (name === 'kpi') renderKpi();
+  if (name === 'hariini') renderHome();
 }
 
 /* ---------- data ---------- */
@@ -354,10 +393,31 @@ async function loadAll() {
     sb.from('clients').select('*').order('name')
   ]);
   cache.tickets = t.data || []; cache.clients = c.data || [];
-  renderTickets(); renderClients(); renderRunbooks(); renderReminders();
+  renderHome(); renderTickets(); renderClients(); renderRunbooks();
   const sel = document.getElementById('tClient');
   sel.innerHTML = '<option value="">— Tanpa klien —</option>' + cache.clients.map(x =>
     '<option value="' + x.id + '">' + esc(x.name) + '</option>').join('');
+}
+
+/* ---------- home ---------- */
+async function renderHome() {
+  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const now = new Date();
+  document.getElementById('dateLine').textContent = days[now.getDay()] + ', ' + now.getDate() + ' ' + months[now.getMonth()];
+  const aktif = cache.tickets.filter(t => t.status !== 'selesai');
+  document.getElementById('heroCount').textContent = aktif.length;
+  document.getElementById('heroTitle').textContent = aktif.length ? 'Ada ' + aktif.length + ' pekerjaan aktif.' : 'Meja kerja siap.';
+  document.getElementById('homeQueue').innerHTML = aktif.length ? aktif.slice(0, 5).map(t =>
+    '<div class="logitem" onclick="openTicket(\'' + t.id + '\')" style="cursor:pointer"><b>#' + t.no + ' ' + esc(t.title) + '</b>' +
+    '<div class="m"><span class="chip ' + t.status + '">' + t.status + '</span> ' + esc(t.clients ? t.clients.name : '') + '</div></div>').join('')
+    : '<div class="t">Belum ada antrean.</div><div class="m">Tiket baru akan muncul di sini.</div>';
+  const { data } = await sb.from('reminders').select('*').eq('done', false).order('due_at', { ascending: true }).limit(5);
+  const rows = data || [];
+  document.getElementById('homeRemCount').textContent = rows.length + ' aktif';
+  document.getElementById('homeRem').innerHTML = rows.length ? rows.map(r =>
+    '<div class="logitem"><b>' + esc(r.title) + '</b><div class="m">' + dt(r.due_at) + '</div></div>').join('')
+    : '<div class="t">Tidak ada pengingat.</div><div class="m">Tambahkan dari detail tiket.</div>';
 }
 
 /* ---------- tiket ---------- */
@@ -412,6 +472,12 @@ async function openTicket(id) {
       '<div class="m">' + (l.duration_minutes ? l.duration_minutes + ' mnt · ' : '') +
       (l.cost ? rp(l.cost) + ' · ' : '') + dt(l.logged_at) + '</div></div>').join('')
     : '<div class="m">Belum ada catatan.</div>';
+  const { data: rems } = await sb.from('reminders').select('*').eq('ticket_id', id).order('due_at', { ascending: true });
+  document.getElementById('tdRems').innerHTML = (rems && rems.length)
+    ? rems.map(r => '<div class="logitem"><b>' + esc(r.title) + '</b>' +
+      '<div class="m">' + dt(r.due_at) + (r.done ? ' · selesai' : '') +
+      ' · <button class="danger-link" onclick="deleteReminder(\'' + r.id + '\')">hapus</button></div></div>').join('')
+    : '<div class="m">Belum ada pengingat.</div>';
   openSheet('sheetTicketDetail');
 }
 async function changeTicketStatus() {
@@ -528,39 +594,25 @@ async function deleteRunbook(id) {
   renderRunbooks();
 }
 
-/* ---------- pengingat ---------- */
-async function renderReminders() {
-  const { data } = await sb.from('reminders').select('*').order('due_at', { ascending: true });
-  const rows = data || [];
-  const open = rows.filter(r => !r.done), done = rows.filter(r => r.done);
-  const item = r =>
-    '<div class="card"><div class="row spread"><div class="t" style="' + (r.done ? 'text-decoration:line-through;color:var(--muted)' : '') + '">' +
-    esc(r.title) + '</div><input type="checkbox" ' + (r.done ? 'checked' : '') +
-    ' onchange="toggleReminder(\'' + r.id + '\', this.checked)" style="width:22px;height:22px"></div>' +
-    '<div class="m">' + dt(r.due_at) + '</div>' +
-    '<button class="danger-link" onclick="deleteReminder(\'' + r.id + '\')">Hapus</button></div>';
-  document.getElementById('remList').innerHTML =
-    (open.length ? open.map(item).join('') : '<div class="empty">Tidak ada pengingat aktif.</div>') +
-    (done.length ? '<div class="t" style="font-weight:800;margin:16px 2px 8px">Selesai</div>' + done.map(item).join('') : '');
-}
+/* ---------- pengingat (dari detail tiket) ---------- */
 async function saveReminder() {
   const title = document.getElementById('rmTitle').value.trim();
   if (!title) { alert('Judul wajib diisi'); return; }
   const { error } = await sb.from('reminders').insert({
-    title, due_at: document.getElementById('rmDue').value || null
+    title, due_at: document.getElementById('rmDue').value || null,
+    ticket_id: openTicketId || null
   });
   if (error) { alert('Gagal: ' + error.message); return; }
   document.getElementById('rmTitle').value = ''; document.getElementById('rmDue').value = '';
-  closeSheets(); renderReminders();
-}
-async function toggleReminder(id, done) {
-  await sb.from('reminders').update({ done }).eq('id', id);
-  renderReminders();
+  closeSheets();
+  if (openTicketId) openTicket(openTicketId);
+  renderHome();
 }
 async function deleteReminder(id) {
   if (!confirm('Hapus pengingat ini?')) return;
   await sb.from('reminders').delete().eq('id', id);
-  renderReminders();
+  if (openTicketId) openTicket(openTicketId);
+  renderHome();
 }
 
 /* ---------- KPI ---------- */
